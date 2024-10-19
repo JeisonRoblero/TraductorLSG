@@ -7,8 +7,6 @@ Diseño, Desarrollo E Implementación De  Un Sistema Traductor De Lengua  De Se�
 - [Instrucciones para el Modelo AI](#instrucciones-para-el-modelo-ai)
 - [Ejecución del Frontend en Flutter](#ejecución-del-frontend-en-flutter)
 - [Ejecución del Backend](#ejecución-del-backend)
-- [Contribuciones](#contribuciones)
-- [Licencia](#licencia)
   
 ## Funcionalidades principales
 
@@ -51,8 +49,7 @@ Diseño, Desarrollo E Implementación De  Un Sistema Traductor De Lengua  De Se�
 - Asegúrate de que la aplicación tenga permisos para acceder a la cámara de tu dispositivo.
 
 ## Algunas capturas
-![GestosAndroid](https://github.com/user-attachments/assets/d8dc2da9-00e3-4e7e-8116-4d4d62bf1bc4)
-
+<img src="https://github.com/user-attachments/assets/d8dc2da9-00e3-4e7e-8116-4d4d62bf1bc4" alt="GestosAndroid" width="250px">
 
 ## Instrucciones para el Modelo AI
 El modelo AI se encuentra en el directorio `ModelAI/Model2.0`. Para ejecutar el sistema de traducción basado en inteligencia artificial, hay que seguir los siguientes pasos:
