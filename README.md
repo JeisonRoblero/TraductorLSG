@@ -17,7 +17,7 @@ Diseño, Desarrollo E Implementación De  Un Sistema Traductor De Lengua  De Se�
 ### Pasos para instalar la aplicación
 
 1. **Descargar el APK**: 
-   - Descargar el archivo APK directamente desde [aquí](app-release.apk) (Descargar app-release.apk)o compilar la app desde el código fuente utilizando Android Studio con Flutter.
+   - Descargar el archivo APK directamente desde [aquí](app-release.apk) (Descargar app-release.apk) o compilar la app desde el código fuente utilizando Android Studio con Flutter.
 
 2. **Habilitar instalación desde fuentes desconocidas (En caso no este habilitado aún)**:
    - Ir a **Configuración** -> **Seguridad** -> **Instalar aplicaciones desconocidas** (puede variar según la versión de Android).
