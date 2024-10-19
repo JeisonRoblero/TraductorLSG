@@ -1,13 +1,22 @@
 # Traductor LSG
 Diseño, Desarrollo E Implementación De  Un Sistema Traductor De Lengua  De Señas Guatemalteco En Tiempo Real  Por Medio De Inteligencia Artificial  Para Personas Con Discapacidad Auditiva
 
+## Índice
+
+- [Instalación de la App Android](#instalación-de-la-app-android)
+- [Instrucciones para el Modelo AI](#instrucciones-para-el-modelo-ai)
+- [Ejecución del Frontend en Flutter](#ejecución-del-frontend-en-flutter)
+- [Ejecución del Backend](#ejecución-del-backend)
+- [Contribuciones](#contribuciones)
+- [Licencia](#licencia)
+  
 ## Funcionalidades principales
 
 - **Reconocimiento de señas en tiempo real**: Traducción automática de señas capturadas por la cámara a texto.
 - **Interfaz de usuario**: Pantalla interactiva que muestra las traducciones en tiempo real.
 - **Acceso de usuario**: Al iniciar puede requerir un usuario "admin" con la contraseña "admin" para acceder a toda la funcionalidad.
 
-## Instalación
+## Instalación de la App Android
 
 ### Prerrequisitos
 
@@ -43,4 +52,122 @@ Diseño, Desarrollo E Implementación De  Un Sistema Traductor De Lengua  De Se�
 
 ## Algunas capturas
 ![GestosAndroid](https://github.com/user-attachments/assets/d8dc2da9-00e3-4e7e-8116-4d4d62bf1bc4)
+
+
+## Instrucciones para el Modelo AI
+El modelo AI se encuentra en el directorio `ModelAI/Model2.0`. Para ejecutar el sistema de traducción basado en inteligencia artificial, hay que seguir los siguientes pasos:
+
+### 1. Instalar dependencias
+
+Primero, hay que asegurarse de que esté Python instalado. Luego, ejecutar el siguiente comando para instalar todas las dependencias del archivo `requirements.txt`:
+
+```bash
+pip install -r ModelAI/Model2.0/requirements.txt
+```
+
+### 2. Recolectar imágenes
+
+Si se desea recolectar nuevas imágenes para el conjunto de datos, ejecutar el siguiente script:
+
+```bash
+python ModelAI/Model2.0/collect_imgs.py
+```
+
+### 3. Crear el conjunto de datos
+
+Para generar el conjunto de datos a partir de las imágenes recolectadas, ejecutar el siguiente comando:
+
+```bash
+python ModelAI/Model2.0/create_dataset.py
+```
+
+### 4. Entrenar el modelo
+
+Para entrenar el modelo de clasificación con el conjunto de datos generado, ejecutar el siguiente comando:
+
+```bash
+python ModelAI/Model2.0/train_classifier.py
+```
+
+### 5. Realizar inferencias o probar el modelo
+
+Si se desea probar el modelo o realizar inferencias sobre un nuevo conjunto de datos, se puede ejecutar el siguiente script:
+
+```bash
+python ModelAI/Model2.0/inference_classifier.py
+```
+
+## Ejecución del Frontend en Flutter
+El frontend de este proyecto está desarrollado en Flutter. Si se desea visualizar la interfaz gráfica y probar el sistema, se debe tener descargado [Flutter]([app-release.apk](https://docs.flutter.dev/get-started/install?_gl=1*qfiir3*_gcl_aw*R0NMLjE3MjkzMTkwNDIuQ2p3S0NBandqc2k0QmhCNUVpd0FGQUwwWUJ3ekpMUVJMYmpDX0R5NDdJMGpnU3lhdHlYYUZuVkFQbjc2WFlsTHhZN1RhUVl2cE5XT3dCb0N3U1VRQXZEX0J3RQ..*_gcl_dc*R0NMLjE3MjkzMTkwNDIuQ2p3S0NBandqc2k0QmhCNUVpd0FGQUwwWUJ3ekpMUVJMYmpDX0R5NDdJMGpnU3lhdHlYYUZuVkFQbjc2WFlsTHhZN1RhUVl2cE5XT3dCb0N3U1VRQXZEX0J3RQ..*_up*MQ..*_ga*MTM0ODE2Nzk3MS4xNzA0Nzc1Njgx*_ga_04YGWK0175*MTcyOTMxOTA0MS41OS4wLjE3MjkzMTkwNDEuMC4wLjA.&gclid=CjwKCAjwjsi4BhB5EiwAFAL0YBwzJLQRLbjC_Dy47I0jgSyatyXaFnVAPn76XYlLxY7TaQYvpNWOwBoCwSUQAvD_BwE&gclsrc=aw.ds)) y seguir estos pasos:
+
+### 1. Dirigirse al directorio del frontend
+
+Navegar al directorio del frontend:
+
+```bash
+cd Frontend/sign_language_translator
+```
+
+### 2. Instalar dependencias de Flutter
+
+Instalar las dependencias necesarias ejecutando el siguiente comando:
+
+```bash
+flutter pub get
+```
+
+### 3. Ejecutar la aplicación Flutter
+
+Para iniciar la aplicación en un dispositivo o emulador Android, ejecutar el siguiente comando:
+
+```bash
+flutter run
+```
+
+### Requisitos
+
+- Flutter: Versión 3.24.3 o superior
+- Dart: Versión 3.5.3 o superior
+- Dispositivo Android: Debe estar conectado y configurado para depuración
+
+
+## Ejecución del Backend
+El backend de este sistema se encarga de procesar las inferencias y está desarrollado en Python. Seguir estos pasos para iniciar el servidor:
+
+### 1. Instalar dependencias
+
+Primero, hay que asegurarse de que esté Python instalado. Luego, ejecutar el siguiente comando para instalar todas las dependencias del archivo `requirements.txt`:
+
+```bash
+pip install -r Backend/inference_server/requirements.txt
+```
+
+### 2. Dirigirse al directorio del backend
+
+Navegar al directorio del backend:
+
+```bash
+cd Backend/inference_server/app
+```
+
+
+### 3. Ejecutar el servidor
+
+Para iniciar el servidor, ejecutar el siguiente script:
+
+```bash
+python server.py
+```
+
+### 4. Desplegar el servidor con Ngrok (Opcional para la app)
+
+Para usar la app, es mejor usar el servicio de despliegue de [ngrok](https://dashboard.ngrok.com/get-started/setup/windows) y pasar esa url en las conexiones de la app para conectarse de manera segura.
+En la consola de ngrok ejecutar:
+
+```bash
+ngrok http http://localhost:5000
+```
+
+
+
 
