@@ -1,7 +1,7 @@
 # Traductor LSG
 Diseño, Desarrollo E Implementación De  Un Sistema Traductor De Lengua  De Señas Guatemalteco En Tiempo Real  Por Medio De Inteligencia Artificial  Para Personas Con Discapacidad Auditiva
 
-NOTA IMPORTANTE: Debido al servidor utilizado para el despliegue, funciona mejor si se ejecuta en un horario laboral de 8:00 a.m a 7:00 p.m por ejemplo.
+NOTA IMPORTANTE: Por el momento, debido al servidor utilizado para el despliegue, funciona mejor si se ejecuta en un horario laboral de 8:00 a.m a 7:00 p.m por ejemplo.
 
 ## Índice
 
