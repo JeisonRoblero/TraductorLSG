@@ -5,7 +5,8 @@ import cv2  # Para procesamiento de imágenes y videos.
 import tkinter as tk  # Importa Tkinter para la interfaz gráfica
 from tkinter import messagebox  # Para mostrar mensajes en ventana
 
-DATA_DIR = './data'  # Ruta al directorio donde se almacenarán los datos recopilados.
+base_dir = os.path.dirname(os.path.abspath(__file__))  # Obtiene la ruta del directorio base
+DATA_DIR = os.path.join(base_dir, 'data')  # Ruta de los videos e imágenes
 
 if not os.path.exists(DATA_DIR):  # Verifica si el directorio no existe.
     os.makedirs(DATA_DIR)  # Crea el directorio si no existe.
