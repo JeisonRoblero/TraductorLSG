@@ -1,9 +1,15 @@
 from flask import Flask, request, jsonify
+from database import init_db
+from routes import app as api
 import numpy as np
 import cv2
 from inference import preprocess_image, make_inference
 
 app = Flask(__name__)
+db_connection = init_db(app) # Inicializa la base de datos
+
+# Registra las rutas
+app.register_blueprint(api)
 
 @app.route('/infer', methods=['POST'])
 def infer():

@@ -2,9 +2,11 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
 import 'package:camera/camera.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:image/image.dart' as img;
 import 'package:http/http.dart' as http;
+import 'package:sign_language_translator/core/constants/constants.dart';
 
 class TranslatorProvider with ChangeNotifier {
   CameraController? cameraController;
@@ -18,6 +20,7 @@ class TranslatorProvider with ChangeNotifier {
   bool isMuted = false;
   FlutterTts flutterTts = FlutterTts(); 
   String translationBuffer = '';
+  String confidenceBuffer = '';
   bool spaceAdded = false; 
 
   // Inicializa la cámara
@@ -29,6 +32,10 @@ class TranslatorProvider with ChangeNotifier {
         errorMessage = 'No se encontraron cámaras disponibles';
         notifyListeners();
         return;
+      }
+
+       if (cameraController != null) {
+        await cameraController!.dispose();
       }
 
       cameraController = CameraController(
@@ -136,7 +143,7 @@ class TranslatorProvider with ChangeNotifier {
   // Envia imagen al backend
   Future<void> sendImageToBackend(Uint8List imageBytes) async {
     try {
-      String url = 'https://visually-flying-grackle.ngrok-free.app/infer';
+      String url = '$baseAIUrl/infer';
 
       print("Enviando solicitud POST a $url con una imagen de ${imageBytes.lengthInBytes} bytes");
 
@@ -161,9 +168,9 @@ class TranslatorProvider with ChangeNotifier {
         confidenceResult = confidenceDouble > 0 ? "${decodedResponse['confidence'].toStringAsFixed(2)}%" : '';
 
         // Acumula la traducción en el buffer, agregando un espacio si es necesario
-        updateTranslation(translationResult);
+        updateTranslation(translationResult, confidenceDouble);
 
-        // Reproducir sonido si no está silenciado y hay un resultado
+        // Reproduce sonido si no está silenciado y hay un resultado
         if (!isMuted && translationResult.isNotEmpty && translationResult != "No se detectó la mano" && translationResult != "Esperando traducción" && translationResult != "Sin traducción") {
           _speakTranslation(translationResult); 
         }
@@ -180,15 +187,17 @@ class TranslatorProvider with ChangeNotifier {
     }
   }
 
-  void updateTranslation(String translationResult) {
+  void updateTranslation(String translationResult, double confidenceDouble) {
     // Si no se detecta la mano y el espacio aún no ha sido agregado
     if (translationResult == "No se detectó la mano" && !spaceAdded) {
       translationBuffer += ' '; // Agrega un espacio solo si no se ha agregado antes
+      confidenceBuffer += ' ';
       spaceAdded = true; // Marca que ya se ha agregado un espacio
     } 
     // Si se detecta una traducción, agrega el texto al buffer
     else if (translationResult != "No se detectó la mano") {
       translationBuffer += translationResult; 
+      confidenceBuffer += confidenceDouble.toString();
       spaceAdded = false; // Resetea la bandera si se detecta una traducción válida
     }
     
@@ -198,19 +207,97 @@ class TranslatorProvider with ChangeNotifier {
   // Método para limpiar el buffer de traducción
   void clearTranslationBuffer() {
     translationBuffer = ''; 
+    confidenceBuffer = '';
     notifyListeners();
   }
 
   // Método para guardar el buffer de traducción
-  void saveTranslationBuffer() {
-    translationBuffer = ''; 
-    notifyListeners();
+Future<void> saveTranslationBuffer(BuildContext context, int idUser) async {
+    // Extraemos los datos del buffer y preparamos los campos necesarios
+    String textoTraducido = translationBuffer;
+    String gestoCapturado = translationBuffer.trim().isNotEmpty 
+        ? translationBuffer.trim().split(' ').last 
+        : '';
+
+    String precision = confidenceBuffer;
+    String fecha = DateTime.now().toIso8601String().split('T').first; // Formato 'YYYY-MM-DD'
+    int idUsuario = idUser;
+    int idModelo = 2;
+
+    // Si el buffer está vacío, no hace nada
+    if (textoTraducido.isEmpty || precision.isEmpty) {
+      showDialogMessage(context, "Aviso", "No hay datos para guardar.");
+      return;
+    }
+
+    // Construye el cuerpo de la solicitud
+    Map<String, dynamic> body = {
+      "texto_traducido": textoTraducido,
+      "gesto_capturado": gestoCapturado,
+      "fecha": fecha,
+      "precision": precision,
+      "id_usuario": idUsuario,
+      "id_modelo": idModelo
+    };
+
+    try {
+      String url = '$baseAPIUrl/traducciones';
+
+      // Solicitud POST al backend
+      var response = await http.post(
+        Uri.parse(url),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode(body),
+      );
+
+      if (response.statusCode == 201) {
+        
+        if (context.mounted) {
+          showDialogMessage(context, "Éxito", "Traducción guardada con éxito.");
+        }
+
+        clearTranslationBuffer(); // Limpiar el buffer tras guardar
+      } else {
+
+        if (context.mounted) {
+          showDialogMessage(context, "Error", "Error al guardar la traducción.");
+        }
+
+        print('Error al guardar la traducción: ${response.body}');
+      }
+    } catch (e) {
+      print('Error al enviar la traducción al backend: $e');
+    }
   }
+
 
   // Método para reproducir el texto como voz en un hilo separado
   Future<void> _speakTranslation(String text) async {
     await Future.delayed(const Duration(milliseconds: 100));  // Para evitar bloqueo
     await flutterTts.speak(text);
+  }
+
+  showDialogMessage(BuildContext context, title, message) {
+    // Muestra el popup de éxito
+      if (context.mounted) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text(title),
+              content: Text(message),
+              actions: [
+                TextButton(
+                  child: const Text('OK'),
+                  onPressed: () {
+                    Navigator.of(context).pop(); // Cierra el dialogo
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      }
   }
 
   @override

@@ -40,6 +40,12 @@ dependencies:
   camera: ^0.11.0+2
   image: ^4.3.0
   flutter_tts: ^4.0.2
+  icons_launcher: ^3.0.0
+  super_cupertino_navigation_bar: ^2.1.2
+  community_material_icon: ^5.9.55
+  shared_preferences: ^2.3.2
+  intl: ^0.18.1
+  webview_flutter: ^4.0.6
 
 dev_dependencies:
   flutter_test:
@@ -51,25 +57,37 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^4.0.0
-  flutter_launcher_icons: "^0.14.1"
 
-flutter_launcher_icons:
-  android: "launcher_icon"
-  ios: true
-  image_path: "assets/imgs/logo.png"
-  min_sdk_android: 21
-  web:
-    generate: true
-    image_path: "assets/imgs/logo.png"
-    background_color: "#ffffff"
-    theme_color: "#ffffff"
-  windows:
-    generate: true
-    image_path: "assets/imgs/logo.png"
-    icon_size: 48
-  macos:
-    generate: true
-    image_path: "assets/imgs/logo.png"
+icons_launcher:
+  platforms:
+    android:
+      enable: true
+      image_path: "assets/imgs/logo.png"
+      notification_image: "assets/imgs/logo.png"
+      adaptive_background_color: "#ffffff"
+      # adaptive_background_image: "assets/imgs/logo.png"
+      adaptive_foreground_image: "assets/imgs/logo.png"
+      adaptive_round_image: "assets/imgs/logo.png"
+      adaptive_monochrome_image: "assets/imgs/logo.png"
+    ios:
+      enable: true
+      image_path: "assets/imgs/logo.png"
+      # For iOS 18+ (support dark and tinted)
+      dark_path: "assets/imgs/logo.png"
+      tinted_path: "assets/imgs/logo.png"
+    web:
+      enable: true
+      image_path: "assets/imgs/logo.png"
+      favicon_path: "assets/imgs/logo.png"
+    macos:
+      enable: true
+      image_path: "assets/imgs/logo.png"
+    windows:
+      enable: true
+      image_path: "assets/imgs/logo.png"
+    linux:
+      enable: true
+      image_path: "assets/imgs/logo.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -86,6 +104,7 @@ flutter:
   assets:
     - assets/model/
     - assets/imgs/
+    - assets/imgs/platforms_logos/
     # - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

@@ -1,10 +1,12 @@
 import 'dart:async';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:camera/camera.dart';
+import 'package:sign_language_translator/features/auth/presentation/provider/authentication_provider.dart';
 import 'package:sign_language_translator/features/translator/presentation/provider/translator_provider.dart';
-import 'package:sign_language_translator/features/translator/presentation/widgets/app_drawer.dart';
-import 'package:sign_language_translator/features/translator/presentation/widgets/blur_container.dart';
+import 'package:sign_language_translator/shared/widgets/blur_container.dart';
+import 'package:sign_language_translator/shared/widgets/blur_app_bar.dart';
 
 class Translator extends StatefulWidget {
   const Translator({super.key});
@@ -39,40 +41,32 @@ class _TranslatorState extends State<Translator> {
     });
   }
 
+  // Detiene la captura de frames
+  void stopRealTimeCapture() {
+    frameTimer?.cancel(); // Detiene el temporizador
+  }
+
   @override
   void dispose() {
-    _scrollController.dispose();
-    frameTimer?.cancel();  // Cancela el temporizador cuando se destruye el widget
+    stopRealTimeCapture(); // Detiene la captura en tiempo real
+    _scrollController.dispose(); // Libera el controlador de scroll
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final bottom = MediaQuery.of(context).padding.bottom;
+    final idUsuario = context.select<AuthenticationProvider, int?>((prov) => prov.id);
 
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        backgroundColor: colorScheme.surface.withOpacity(0.1),
-        title: const Text("Traductor LSG", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.camera),
-            onPressed: () async {
-              // Cambia entre las cámaras disponibles
-              await _provider.switchCamera();
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.flip),
-            onPressed: () {
-              // Cambia la perspectiva de la cámara (invierte horizontalmente)
-              _provider.toggleFlip();
-            },
-          ),
-        ],
+      appBar: BlurAppBar(
+        backgroundColor: colorScheme.surface.withOpacity(0.2),
+        leading: IconButton(onPressed: () => Navigator.of(context).pop(), icon: const Icon(CupertinoIcons.back, size: 30)),
+        title: "Traductor LSG",
+        centerTitle: true,
       ),
-      drawer: const AppDrawer(),
       body: Consumer<TranslatorProvider>(
         builder: (context, provider, child) {
           if (provider.isCameraInitialized) {
@@ -102,77 +96,21 @@ class _TranslatorState extends State<Translator> {
                   ),
                 ),
 
-                Positioned(
-                  bottom: 130,
-                  right: 10,
-                  child: Column(
-                    children: [
-
-                      // Botón de cambiar cámara
-                      BlurContainer(
-                        backgroundColor: colorScheme.secondary.withOpacity(0.5),
-                        child: IconButton(
-                          tooltip: "Cambiar Cámara",
-                          color: colorScheme.onSecondary,
-                          icon: const Icon(Icons.cameraswitch, size: 25),
-                          onPressed: () async {
-                            // Cambia entre las cámaras disponibles
-                            await _provider.switchCamera();
-                          },
-                        ),
-                      ),
-
-                      const SizedBox(height: 10),
-
-                      // Botón de invertir perspectiva
-                      BlurContainer(
-                        backgroundColor: colorScheme.secondary.withOpacity(0.5),
-                        child: IconButton(
-                          tooltip: "Invertir Cámara",
-                          color: colorScheme.onSecondary,
-                          icon: const Icon(Icons.flip, size: 25),
-                          onPressed: () {
-                            // Cambia la perspectiva de la cámara (invierte horizontalmente)
-                            _provider.toggleFlip();
-                          },
-                        ),
-                      ),  
-
-                      const SizedBox(height: 10),
-
-                      // Botón de silenciar
-                      BlurContainer(
-                        backgroundColor: colorScheme.secondary.withOpacity(0.5),
-                        child: IconButton(
-                          tooltip: "Silenciar / Escuchar",
-                          icon: Icon(
-                            _provider.isMuted ? Icons.volume_off : Icons.volume_up, // Cambia entre bocina y silencio
-                            color: colorScheme.onSecondary,
-                            size: 25,
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              _provider.isMuted = !_provider.isMuted; // Cambia el estado de mute
-                            });
-                          },
-                        ),
-                      ),
-                                         
-                    ],
-                  ),
-                ),
-
                 // Muestra la traducción en tiempo real en la parte inferior
                 Positioned(
                   bottom: 0,
                   left: 0,
                   right: 0,
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
+
+                      buildSideButtons(colorScheme),
 
                       // Traducción en tiempo real
                       BlurContainer(
-                        backgroundColor: colorScheme.onSurface.withOpacity(0.5),
+                        padding: EdgeInsets.only(bottom: bottom > 10 && provider.translationBuffer.isEmpty ? bottom - 5 : 0),
+                        backgroundColor: colorScheme.surface.withOpacity(0.5),
                         borderRadius: 0.0,
                         child: Container(
                           width: MediaQuery.of(context).size.width,
@@ -182,15 +120,15 @@ class _TranslatorState extends State<Translator> {
                               children: [
                                 TextSpan(
                                   text: provider.translationResult,
-                                  style: TextStyle(color: colorScheme.surface, fontSize: 24),
+                                  style: TextStyle(color: colorScheme.onSurface, fontSize: 24, fontWeight: FontWeight.w500),
                                 ),
                                 TextSpan(
                                   text: provider.confidenceResult.isNotEmpty ? "  --  " : "",
-                                  style: TextStyle(color: colorScheme.surface, fontSize: 24),
+                                  style: TextStyle(color: colorScheme.onSurface, fontSize: 24, fontWeight: FontWeight.w500),
                                 ),
                                 TextSpan(
                                   text: provider.confidenceResult,
-                                  style: const TextStyle(color: Colors.greenAccent, fontSize: 24),
+                                  style: const TextStyle(color: Colors.greenAccent, fontSize: 24, fontWeight: FontWeight.w500),
                                 ),
                               ],
                             ),
@@ -202,7 +140,8 @@ class _TranslatorState extends State<Translator> {
                       // Traducción acumulada
                       if (provider.translationBuffer.isNotEmpty)
                         BlurContainer(
-                          backgroundColor: colorScheme.secondary.withOpacity(0.5),
+                          padding: EdgeInsets.only(bottom: bottom > 10 ? bottom - 5 : 0),
+                          backgroundColor: colorScheme.surfaceBright.withOpacity(0.7),
                           borderRadius: 0.0,
                           child: Container(
                             padding: const EdgeInsets.all(8.0),
@@ -210,17 +149,18 @@ class _TranslatorState extends State<Translator> {
                               children: [
 
                                 // Botón de guardar buffer
-                                IconButton(
-                                  tooltip: "Guardar Traducción",
-                                  icon: const Icon(
-                                    Icons.save,
-                                    color: Colors.blue,
-                                    size: 25,
+                                if (idUsuario != null && idUsuario != 0)
+                                  IconButton(
+                                    tooltip: "Guardar Traducción",
+                                    icon: const Icon(
+                                      Icons.save,
+                                      color: Colors.blue,
+                                      size: 25,
+                                    ),
+                                    onPressed: () {
+                                      provider.saveTranslationBuffer(context, idUsuario);
+                                    },
                                   ),
-                                  onPressed: () {
-                                    provider.saveTranslationBuffer();
-                                  },
-                                ),
 
                                 Expanded(
                                   child: SingleChildScrollView(
@@ -228,7 +168,7 @@ class _TranslatorState extends State<Translator> {
                                     controller: _scrollController,
                                     child: Text(
                                       provider.translationBuffer, // Muestra el buffer acumulado
-                                      style: TextStyle(color: colorScheme.surface, fontSize: 18),
+                                      style: TextStyle(color: colorScheme.onSurfaceVariant, fontSize: 18, fontWeight: FontWeight.w500),
                                       maxLines: 1, // Limita la cantidad de líneas
                                     ),
                                   ),
@@ -241,7 +181,7 @@ class _TranslatorState extends State<Translator> {
                                   tooltip: "Limpiar Traducción",
                                   icon: Icon(
                                     Icons.backspace_rounded,
-                                    color: colorScheme.onSecondary,
+                                    color: colorScheme.onSurfaceVariant,
                                     size: 25,
                                   ),
                                   onPressed: () {
@@ -263,6 +203,60 @@ class _TranslatorState extends State<Translator> {
             );
           }
         },
+      ),
+    );
+  }
+
+  Widget buildSideButtons(ColorScheme colorScheme) {
+    return Container(
+      padding: const EdgeInsets.only(right: 12.0, bottom: 12.0),
+      child: Column(
+        children: [
+          // Botón de cambiar cámara
+          BlurContainer(
+            backgroundColor: colorScheme.onSecondary.withOpacity(0.5),
+            child: IconButton(
+              tooltip: "Cambiar Cámara",
+              icon: Icon(Icons.cameraswitch, size: 25, color: colorScheme.onSurface),
+              onPressed: () async {
+                // Cambia entre las cámaras disponibles
+                await _provider.switchCamera();
+              },
+            ),
+          ),
+      
+          const SizedBox(height: 10),
+      
+          // Botón de invertir perspectiva
+          BlurContainer(
+            backgroundColor: colorScheme.onSecondary.withOpacity(0.5),
+            child: IconButton(
+              tooltip: "Invertir Cámara",
+              icon: Icon(Icons.flip, size: 25, color: colorScheme.onSurface),
+              onPressed: () {
+                // Cambia la perspectiva de la cámara (invierte horizontalmente)
+                _provider.toggleFlip();
+              },
+            ),
+          ),
+      
+          const SizedBox(height: 10),
+      
+          // Botón de silenciar
+          BlurContainer(
+            backgroundColor: colorScheme.onSecondary.withOpacity(0.5),
+            child: IconButton(
+              tooltip: "Silenciar / Escuchar",
+              icon: Icon(_provider.isMuted ? Icons.volume_off : Icons.volume_up, color: colorScheme.onSurface, size: 25),
+              onPressed: () {
+                setState(() {
+                  _provider.isMuted =
+                      !_provider.isMuted; // Cambia el estado de mute
+                });
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
