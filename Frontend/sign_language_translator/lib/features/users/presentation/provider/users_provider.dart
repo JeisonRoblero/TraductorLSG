@@ -50,7 +50,7 @@ class UsersProvider with ChangeNotifier {
     final response = await http.delete(Uri.parse('$baseAPIUrl/usuarios/$id'));
 
     if (response.statusCode == 204) {
-      _users.removeWhere((u) => u['id'] == id); // Elimina el usuario de la lista
+      _users.removeWhere((u) => u['id_usuario'] == id); // Elimina el usuario de la lista
       notifyListeners();
     }
   }
