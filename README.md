@@ -1,7 +1,8 @@
 # Traductor LSG
 Diseño, Desarrollo E Implementación De  Un Sistema Traductor De Lengua  De Señas Guatemalteco En Tiempo Real  Por Medio De Inteligencia Artificial  Para Personas Con Discapacidad Auditiva
 
-NOTA IMPORTANTE: Por el momento, debido al servidor utilizado para el despliegue, funciona mejor si se ejecuta en un horario laboral de 8:00 a.m a 7:00 p.m por ejemplo.
+Video del Funcionamiento:
+https://youtu.be/TfViGbjn-Dc
 
 ## Índice
 
@@ -39,8 +40,12 @@ NOTA IMPORTANTE: Por el momento, debido al servidor utilizado para el despliegue
 4. **Acceso de usuario**:
    - Al iniciar la app puede que pida para ingresar un usuario y contraseña.
    - Use las siguientes credenciales para acceder a todas las funcionalidades:
-     - **Usuario**: `admin`
+     - **Usuario**: `admin@admin.com`
      - **Contraseña**: `admin`
+   
+  - Credenciales de un usuario normal:
+    - **Usuario**: `jeison@gmail.com`
+    - **Contraseña**: `123` 
 
 5. **Uso de la app**:
    - Una vez que haya iniciado sesión, podrá comenzar a usar la funcionalidad de traducción de lengua de señas en tiempo real colocando señas frente a la cámara, se podrá observar su traducción en tiempo real y con voz. Se pueden encontrar más instrucciones al tocar los botones dentro de la App.
@@ -52,6 +57,31 @@ NOTA IMPORTANTE: Por el momento, debido al servidor utilizado para el despliegue
 
 ## Algunas capturas
 <img src="https://github.com/user-attachments/assets/d8dc2da9-00e3-4e7e-8116-4d4d62bf1bc4" alt="GestosAndroid" width="250px">
+<img src="https://github.com/user-attachments/assets/0704f5a2-808e-4b56-9284-338a15faf795" alt="GestosAndroid" width="250px">
+<img src="https://github.com/user-attachments/assets/7c220dfb-6ace-45f5-9f90-ffacb8389700" alt="GestosAndroid" width="250px">
+<img src="https://github.com/user-attachments/assets/47b35301-1822-4a08-b79e-752cb3890ad2" alt="GestosAndroid" width="250px">
+<img src="https://github.com/user-attachments/assets/b468217f-218e-4cf3-890c-378c5045e7de" alt="GestosAndroid" width="250px">
+<img src="https://github.com/user-attachments/assets/073713b2-4e73-416d-8af2-3dfd3a1ef40f" alt="GestosAndroid" width="250px">
+<img src="https://github.com/user-attachments/assets/233cb340-4a19-4564-bf8c-7001dd82b06a" alt="GestosAndroid" width="250px">
+<img src="https://github.com/user-attachments/assets/20cb490e-b5a7-4add-9b9b-8f7c9ca08b09" alt="GestosAndroid" width="250px">
+<img src="https://github.com/user-attachments/assets/363fb28a-8cb9-4e73-b478-a439f4dab6a8" alt="GestosAndroid" width="250px">
+<img src="https://github.com/user-attachments/assets/37b34874-b5a9-40ca-9d7d-f5414dad6d42" alt="GestosAndroid" width="250px">
+<img src="https://github.com/user-attachments/assets/6ee3a7ee-4dc9-4096-a1e4-20aaf5cf2a18" alt="GestosAndroid" width="250px">
+<img src="https://github.com/user-attachments/assets/799fff8e-45a1-4f2f-b04b-711727d9d98d" alt="GestosAndroid" width="250px">
+<img src="https://github.com/user-attachments/assets/ddcf1d33-a625-4b38-9307-09d7bfafb440" alt="GestosAndroid" width="250px">
+<img src="https://github.com/user-attachments/assets/c89b0756-f927-4d92-939c-fe55b0a1f326" alt="GestosAndroid" width="250px">
+<img src="https://github.com/user-attachments/assets/5ebbfa7a-9a78-4e5c-971e-599a475bc291" alt="GestosAndroid" width="250px">
+<img src="https://github.com/user-attachments/assets/c21db12b-999a-405f-bec0-a702492d1b98" alt="GestosAndroid" width="250px">
+<img src="https://github.com/user-attachments/assets/799d6d65-c005-4409-a850-eac0b6af61f7" alt="GestosAndroid" width="250px">
+<img src="https://github.com/user-attachments/assets/2a74d443-7504-43b6-89ae-2a29c69dee04" alt="GestosAndroid" width="250px">
+<img src="https://github.com/user-attachments/assets/41768b47-58fc-4eaa-b4ef-5150abec1266" alt="GestosAndroid" width="250px">
+<img src="https://github.com/user-attachments/assets/8f6383c1-7d2d-44f6-933d-2ce18b6071fa" alt="GestosAndroid" width="250px">
+<img src="https://github.com/user-attachments/assets/6e7818a9-76cf-4887-a342-992cbc30eb41" alt="GestosAndroid" width="250px">
+<img src="https://github.com/user-attachments/assets/819374b9-3499-4b56-bef3-c0cc2549d667" alt="GestosAndroid" width="250px">
+<img src="https://github.com/user-attachments/assets/b17bc636-67ee-44b6-90b1-aad0f58f5a53" alt="GestosAndroid" width="250px">
+<img src="https://github.com/user-attachments/assets/7accafc7-4d61-4495-b43d-df1bfb7303b4" alt="GestosAndroid" width="250px">
+<img src="https://github.com/user-attachments/assets/e8724307-b8c0-41f5-a50b-9b320194eb92" alt="GestosAndroid" width="250px">
+<img src="https://github.com/user-attachments/assets/611bc0c8-6a3f-48c0-adf4-96ce91c0090d" alt="GestosAndroid" width="250px">
 
 ## Instrucciones para el Modelo AI
 El modelo AI se encuentra en el directorio `ModelAI/Model2.0`. Para ejecutar el sistema de traducción basado en inteligencia artificial, hay que seguir los siguientes pasos:
