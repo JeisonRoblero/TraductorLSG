@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sign_language_translator/core/providers/app_providers.dart';
 import 'package:sign_language_translator/features/auth/presentation/screens/auth_gate.dart';
+import 'package:sign_language_translator/features/settings/presentation/provider/theme_provider.dart';
 
 void main() {
   runApp(
@@ -17,17 +18,25 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeMode = context.select<ThemeProvider, ThemeModeOption>((prov) => prov.themeMode);
+    final primaryColor = context.select<ThemeProvider, Color?>((prov) => prov.primaryColor);
+    
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Sistema Traductor de Lengua de Señas Guatemalteco',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: primaryColor ?? Colors.deepPurple),
         useMaterial3: true,
       ),
       darkTheme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple, brightness: Brightness.dark),
+        colorScheme: ColorScheme.fromSeed(seedColor: primaryColor ?? Colors.deepPurple, brightness: Brightness.dark),
         useMaterial3: true,
       ),
+      themeMode: themeMode == ThemeModeOption.system
+          ? ThemeMode.system
+          : themeMode == ThemeModeOption.dark
+              ? ThemeMode.dark
+              : ThemeMode.light,
       home: const AuthGate(),
     );
   }

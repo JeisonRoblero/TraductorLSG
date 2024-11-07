@@ -4,6 +4,7 @@ from flask import Blueprint, request, jsonify, current_app
 from database import init_db
 from werkzeug.security import generate_password_hash, check_password_hash
 import mysql.connector
+import bcrypt
 
 app = Blueprint('api', __name__)
 
@@ -68,7 +69,8 @@ def delete_modelo(id):
 def create_usuario():
     data = request.json
     correo = data['correo']
-    hashed_password = data['contrasenia']
+    password = data['contrasenia']
+    hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
 
     try:
         with get_db_connection() as conn:
@@ -141,9 +143,37 @@ def login():
                 cursor.execute('SELECT * FROM usuario WHERE correo=%s', (data['correo'],))
                 usuario = cursor.fetchone()
 
-                if usuario and (usuario[4] == data['contrasenia']):
-                    token = generate_token(usuario[0]) 
-                    return jsonify({"token": token, "id": usuario[0], "nombre": usuario[1], "apellido": usuario[2], "correo": usuario[3], "rol": usuario[5], "imagen": usuario[6]}), 200
+                if usuario:
+                    stored_password = usuario[4]  # Contraseña almacenada
+
+                    try:
+                        # Intentamos comparar con bcrypt, si la contraseña es cifrada
+                        if bcrypt.checkpw(data['contrasenia'].encode('utf-8'), stored_password.encode('utf-8')):
+                            token = generate_token(usuario[0])
+                            return jsonify({
+                                "token": token, 
+                                "id": usuario[0], 
+                                "nombre": usuario[1], 
+                                "apellido": usuario[2], 
+                                "correo": usuario[3], 
+                                "rol": usuario[5], 
+                                "imagen": usuario[6]
+                            }), 200
+                    except ValueError:
+                        # Si ocurre un ValueError es porque no es un hash de bcrypt
+                        # Entonces comparamos directamente con la contraseña en texto claro
+                        if stored_password == data['contrasenia']:
+                            token = generate_token(usuario[0])
+                            return jsonify({
+                                "token": token, 
+                                "id": usuario[0], 
+                                "nombre": usuario[1], 
+                                "apellido": usuario[2], 
+                                "correo": usuario[3], 
+                                "rol": usuario[5], 
+                                "imagen": usuario[6]
+                            }), 200
+                            
         return jsonify({"message": "Credenciales inválidas"}), 401
     except Exception as e:
         return jsonify({"error": str(e)}), 500

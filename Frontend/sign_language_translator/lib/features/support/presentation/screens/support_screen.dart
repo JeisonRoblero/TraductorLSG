@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:sign_language_translator/features/auth/presentation/provider/authentication_provider.dart';
+import 'package:sign_language_translator/features/support/presentation/provider/support_provider.dart';
+import 'package:sign_language_translator/main.dart';
 import 'package:sign_language_translator/shared/widgets/app_drawer.dart';
 import 'package:sign_language_translator/shared/widgets/platform_button.dart';
 import 'package:super_cupertino_navigation_bar/super_cupertino_navigation_bar.dart';
@@ -18,6 +22,18 @@ class _SupportScreenState extends State<SupportScreen> {
   final TextEditingController _descriptionController = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final authProvider = Provider.of<AuthenticationProvider>(context, listen: false);
+      _nameController.text = "${authProvider.nombre?.toCapitalized ?? ''} ${authProvider.apellido?.toCapitalized ?? ''}";
+      _emailController.text = authProvider.correo ?? '';
+    });
+    
+  }
+
+  @override
   void dispose() {
     // Libera los controladores al cerrar la pantalla
     _nameController.dispose();
@@ -27,17 +43,44 @@ class _SupportScreenState extends State<SupportScreen> {
     super.dispose();
   }
 
-  void _submitForm() {
-    // Envia el formulario y limpia los campos
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Formulario enviado.')),
-    );
-    
-    // Limpia los campos después del envío
-    _nameController.clear();
-    _emailController.clear();
-    _subjectController.clear();
-    _descriptionController.clear();
+  void _submitForm(BuildContext context) {
+    if (_subjectController.text.isNotEmpty && _emailController.text.isNotEmpty && _nameController.text.isNotEmpty && _descriptionController.text.isNotEmpty) {
+      Provider.of<SupportProvider>(context, listen: false).sendEmail(_subjectController.text, _emailController.text, _nameController.text, _descriptionController.text);
+
+      // Muestra un mensaje de éxito
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Formulario enviado.',
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
+        ),
+      );
+      
+      // Limpia los campos después del envío
+      _subjectController.clear();
+      _descriptionController.clear();
+
+    } else {
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Llena los campos primero!',
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
+        ),
+      );
+
+    }
   }
 
   @override
@@ -79,6 +122,7 @@ class _SupportScreenState extends State<SupportScreen> {
               // Campo para el correo electrónico
               TextField(
                 controller: _emailController,
+                enabled: false,
                 decoration: InputDecoration(
                   labelText: 'Correo Electrónico',
                   border: OutlineInputBorder(
@@ -118,7 +162,7 @@ class _SupportScreenState extends State<SupportScreen> {
               Align(
                 alignment: Alignment.centerRight,
                 child: ElevatedButton(
-                  onPressed: _submitForm,
+                  onPressed: () => _submitForm(context),
                   child: const Text('Enviar'),
                 ),
               ),

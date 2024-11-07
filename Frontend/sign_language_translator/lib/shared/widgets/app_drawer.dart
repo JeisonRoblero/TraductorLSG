@@ -5,6 +5,7 @@ import 'package:sign_language_translator/features/home/presentation/screens/home
 import 'package:sign_language_translator/features/learn/presentation/screens/learn_screen.dart';
 import 'package:sign_language_translator/features/modelsai/presentation/screens/modelsai_screen.dart';
 import 'package:sign_language_translator/features/saved_translations/presentation/screens/saved_translations_screen.dart';
+import 'package:sign_language_translator/features/settings/presentation/screens/settings_screen.dart';
 import 'package:sign_language_translator/features/support/presentation/screens/support_screen.dart';
 import 'package:sign_language_translator/features/users/presentation/screens/users_screen.dart';
 
@@ -76,6 +77,13 @@ class AppDrawer extends StatelessWidget {
                   ),
               ],
             ),
+          ),
+          ListTile(
+            leading: Icon(Icons.settings, color: colorScheme.onSurface),
+            title: Text('Configuración', style: TextStyle(color: colorScheme.onSurface)),
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => const SettingsScreen()));
+            },
           ),
           ListTile(
             leading: Icon(Icons.help_outline, color: colorScheme.onSurface),

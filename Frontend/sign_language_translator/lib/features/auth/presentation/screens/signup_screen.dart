@@ -1,3 +1,4 @@
+import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -24,10 +25,14 @@ class _SignupScreenState extends State<SignupScreen> {
 
   bool _isPasswordMatched = false;
   bool _isLoading = false;
+  Color? _errorColor;
+  bool _showPass = false;
 
   @override
   void initState() {
     super.initState();
+    _emailController.addListener(_validateForm);
+    _passwordController.addListener(_validateForm);
     _passwordController.addListener(_checkPasswords);
     _confPasswordController.addListener(_checkPasswords);
   }
@@ -51,6 +56,8 @@ class _SignupScreenState extends State<SignupScreen> {
     final paddingBottom = MediaQuery.of(context).padding.bottom;
     final auth = Provider.of<AuthenticationProvider>(context, listen: false);
     final isLoading = context.select<AuthenticationProvider, bool>((provider) => provider.isLoading);
+    final emailError = context.select<AuthenticationProvider, String?>((provider) => provider.emailError);
+    final passwordError = context.select<AuthenticationProvider, String?>((provider) => provider.passwordError);
     
     return Scaffold(
       backgroundColor: colorScheme.surface,
@@ -115,6 +122,8 @@ class _SignupScreenState extends State<SignupScreen> {
                 margin: const EdgeInsets.symmetric(horizontal: 20),
                 fontSize: 17,
                 hintText: "Correo",
+                errorText: emailError,
+                errorColor: _errorColor,
               ),
       
               const SizedBox(
@@ -126,9 +135,18 @@ class _SignupScreenState extends State<SignupScreen> {
                 controller: _passwordController,
                 backgroundColor: colorScheme.surfaceContainer,
                 margin: const EdgeInsets.symmetric(horizontal: 20),
-                obscureText: true,
+                obscureText: !_showPass,
                 fontSize: 17,
                 hintText: "Contraseña",
+                errorText: passwordError,
+                errorColor: _errorColor,
+                trailing: PlatformButton(
+                  onPressed: () => setState(() { _showPass = !_showPass; }),
+                  tooltip: "Mostrar contraseña",
+                  padding: const EdgeInsets.all(5),
+                  borderRadius: BorderRadius.circular(50.0),
+                  child: _showPass ? const Icon(CommunityMaterialIcons.eye) : const Icon(CommunityMaterialIcons.eye_off),
+                ),
               ),
 
               const SizedBox(
@@ -140,9 +158,16 @@ class _SignupScreenState extends State<SignupScreen> {
                 controller: _confPasswordController,
                 backgroundColor: colorScheme.surfaceContainer,
                 margin: const EdgeInsets.symmetric(horizontal: 20),
-                obscureText: true,
+                obscureText: !_showPass,
                 fontSize: 17,
                 hintText: "Confirma la contraseña",
+                trailing: PlatformButton(
+                  onPressed: () => setState(() { _showPass = !_showPass; }),
+                  tooltip: "Mostrar contraseña",
+                  padding: const EdgeInsets.all(5),
+                  borderRadius: BorderRadius.circular(50.0),
+                  child: _showPass ? const Icon(CommunityMaterialIcons.eye) : const Icon(CommunityMaterialIcons.eye_off),
+                ),
               ),
       
               const SizedBox(
@@ -219,5 +244,33 @@ class _SignupScreenState extends State<SignupScreen> {
         ),
       ),
     );
+  }
+
+  // Función para validar los campos
+  void _validateForm() {
+    final auth = Provider.of<AuthenticationProvider>(context, listen: false);
+    final email = _emailController.text;
+    final password = _passwordController.text;
+
+    final emailValid = RegExp(r"^[^\s@]+@[^\s@]+\.[^\s@]+$").hasMatch(email);
+    final passwordValid = password.isNotEmpty && !password.contains(' ');
+
+    if (!emailValid || !passwordValid) {
+      _errorColor = const Color.fromARGB(255, 164, 126, 13);
+    } else {
+      _errorColor = null;
+    }
+
+    if (!emailValid && email.isNotEmpty) {
+      auth.emailError = "Correo no válido. Ej: user@google.com";
+    } else {
+      auth.emailError = null;
+    }
+
+    if (!passwordValid && password.isNotEmpty) {
+      auth.passwordError = "La contraseña no debe tener espacios en blanco";
+    } else {
+      auth.passwordError = null;
+    }
   }
 }
