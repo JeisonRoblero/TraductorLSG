@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 28-10-2024 a las 22:51:17
+-- Tiempo de generación: 07-11-2024 a las 23:12:12
 -- Versión del servidor: 10.4.25-MariaDB
 -- Versión de PHP: 7.4.30
 
@@ -101,7 +101,7 @@ CREATE TABLE `usuario` (
 --
 
 INSERT INTO `usuario` (`id_usuario`, `nombre`, `apellido`, `correo`, `contrasenia`, `rol`, `imagen`, `fecha_creacion`, `fecha_modificacion`) VALUES
-(1, 'admin', 'admin', 'admin@admin.com', 'admin', 'admin', '', '2024-10-25 19:55:43', '2024-10-28 15:11:38'),
+(1, 'admin', 'admin', 'admin@admin.com', 'admin', 'admin', '', '2024-10-25 19:55:43', '2024-10-29 16:28:14'),
 (8, 'Jeison ', 'Roblero ', 'jeison@gmail.com', '123', 'user', 'https://wallpapers.com/images/hd/cool-profile-pictures-panda-man-gsl2ntkjj3hrk84s.jpg', '2024-10-27 04:45:38', '2024-10-28 04:14:19'),
 (10, 'David modificado', 'Lopez', 'david@gmail.com', '000', 'user', 'https://cdn-icons-png.flaticon.com/512/3135/3135768.png', '2024-10-27 05:29:37', '2024-10-28 03:38:24'),
 (14, 'Carlos Nuevooooo 1', 'Robes', 'carlos1@gmail.com', '123', 'user', NULL, '2024-10-28 03:31:22', '2024-10-28 03:31:22'),
@@ -117,7 +117,9 @@ INSERT INTO `usuario` (`id_usuario`, `nombre`, `apellido`, `correo`, `contraseni
 (26, 'Camilo', 'Monze', 'camilo@gmail.com', '123456', 'user', NULL, '2024-10-28 14:24:42', '2024-10-28 14:24:42'),
 (27, 'Galicia', 'Rosales', 'galicia@gmail.com', '00000', 'user', NULL, '2024-10-28 14:25:14', '2024-10-28 14:25:14'),
 (28, 'Patricia', 'Mendez Mendez', 'patricia@gmail.com', 'patricia123', 'user', NULL, '2024-10-28 14:25:46', '2024-10-28 14:25:46'),
-(31, 'Kimberly', 'Gomez', 'kim@gmail.com', '123456', 'user', NULL, '2024-10-28 15:50:25', '2024-10-28 15:50:25');
+(31, 'Kimberly', 'Gomez', 'kim@gmail.com', '123456', 'user', NULL, '2024-10-28 15:50:25', '2024-10-28 15:50:25'),
+(32, 'Laura', 'Lezus', 'laurale@gmail.com', '$2b$12$rNNLCqy7DHQjPuvGlo6uuedHQmGkfjI21J19ItEGjET8IqAar1jq6', 'user', NULL, '2024-11-07 03:20:25', '2024-11-07 03:20:25'),
+(33, 'Mauricio', 'Gomez', 'mauricio@gmail.com', '$2b$12$8iFTHOItvmYY4nHKX4pKIOSYS3n34B1TbNQQFWrHecEreVO2WbO1a', 'user', NULL, '2024-11-07 04:30:15', '2024-11-07 04:31:37');
 
 --
 -- Índices para tablas volcadas
@@ -163,7 +165,7 @@ ALTER TABLE `traduccion`
 -- AUTO_INCREMENT de la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- Restricciones para tablas volcadas

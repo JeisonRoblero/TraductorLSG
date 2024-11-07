@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:sign_language_translator/core/providers/app_providers.dart';
 import 'package:sign_language_translator/features/auth/presentation/screens/auth_gate.dart';
 import 'package:sign_language_translator/features/settings/presentation/provider/theme_provider.dart';
 
-void main() {
+void main() async {
+  await dotenv.load(fileName: ".env");
+  
   runApp(
     MultiProvider(
       providers: AppProviders.providers,

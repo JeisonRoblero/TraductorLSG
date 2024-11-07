@@ -1,13 +1,14 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 
 class SupportProvider with ChangeNotifier {
   
   Future<void> sendEmail(String subject, String email, String name, String description) async  {
     if (subject.isNotEmpty && email.isNotEmpty && name.isNotEmpty) {
-      const String mailgunDomain = 'sandboxb9ab834b1d1a4a18893fa8445c3551af.mailgun.org';
-      const String apiKey = '0be547a7aceddb8cac1708c27c6be220-f6fe91d3-865aad4e';
+      const String mailgunDomain = 'sandbox644117d8fcb2429e98bd34aae4a89e6d.mailgun.org';
+      final String apiKey = dotenv.env['MAILGUN_API_KEY'] ?? '';
       const String mailgunUrl = 'https://api.mailgun.net/v3/$mailgunDomain/messages';
 
       // Datos para el correo
